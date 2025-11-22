@@ -45,6 +45,9 @@ graph TD
     C --> B;
     D --> B;
 
+
+
+##############
 🔬 Pipeline Detayları
 1. 📖 PDF İşleme Süreci (RAG)
 Parsing: PDF'ler PyMuPDF ile metin olarak çıkarılır.
