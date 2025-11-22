@@ -22,7 +22,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./tmp/uploads:/tmp/uploads 
+      - ./tmp/uploads:/tmp/uploads
+      - .:/app  # ✅ Tüm proje dosyalarını mount et
 
   streamlit:
     build: .
@@ -35,6 +36,8 @@ services:
       - FASTAPI_URL=http://fastapi:8000
     ports:
       - "8501:8501"
+    volumes:
+      - .:/app  
     command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
 
 volumes:

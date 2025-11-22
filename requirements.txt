@@ -15,5 +15,9 @@ unstructured
 streamlit
 requests
 pymupdf
-pypdf
 pdfplumber
+pillow
+pytesseract
+matplotlib
+plotly
+graphviz
