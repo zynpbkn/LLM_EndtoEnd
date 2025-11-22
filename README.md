@@ -1,6 +1,6 @@
 # 📚 Dinamik Öğrenme Yolu Rehberi (Dynamic Learning Path Guide)
 
-!(/home/train/week_05_08/llm_final_project/llm_endtoend_proje/assest/hero.png)
+![Dinamik Öğrenme Yolu Rehberi Uygulaması](assest/hero.png)
 
 Bu proje, yapay zeka destekli, kişiselleştirilmiş ve **çok modlu (multimodal)** bir öğrenme asistanıdır. Öğrencilerin kendi ders materyallerini yüklemelerine, bu materyaller hakkında soru sormalarına ve görselleri (diyagramlar, formüller, grafikler) analiz etmelerine olanak tanır.
 
