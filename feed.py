@@ -38,7 +38,15 @@ try:
 except Exception as e:
     print(f"⚠️  Başlangıç yüklemesi atlandı: {e}")
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.7)
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError("❌ GOOGLE_API_KEY .env'de bulunamadı!")
+
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash", 
+    temperature=0.7,
+    google_api_key=api_key
+)
 
 store = {}
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
@@ -53,11 +61,29 @@ contextualize_q_prompt = ChatPromptTemplate.from_messages([
 ])
 
 qa_prompt_template = ChatPromptTemplate.from_messages([
-    ("system", """Sen akıllı ders notu asistanısın. 
-    Aşağıdaki bağlamı (context) kullanarak soruyu yanıtla.
-    Soruyu tanı, özetle, gerekirse diyagram oluştur veya grafik çiz.
-    Eğer cevabı bağlamda bulamazsan, bilmediğini söyle.
-
+    ("system", """Sen matematik ders notu asistanısın. 
+    Aşağıdaki bağlamı kullanarak soruyu yanıtla.
+    
+    ÖNEMLİ:
+    - Kapak, önsöz, fotoğraf gibi kısımları yoksay
+    - Önce bağlamda cevabı ara
+    - Bağlamda yoksa, kendi bilgini kullan (LLM olarak)
+    - Matematiksel soruları adım adım çöz
+    - Gerekirse diyagram veya grafik oluştur
+    📊 GRAFİK/ŞEKİL İSTENMESİ:
+    Kullanıcı grafik, diyagram, şekil, çizim isterse:
+    1. Cevabı açıkla
+    2. Sonra ŞU FORMATTA grafiksel gösterim ver:
+    
+    GRAPH: [x_değerleri], [y_değerleri]
+    
+    ÖRNEKLER:
+    - Parabol: GRAPH: [-2,-1,0,1,2], [4,1,0,1,4]
+    - Doğru: GRAPH: [0,1,2,3], [0,2,4,6]
+    - Trigonometrik: GRAPH: [0,1.57,3.14,4.71,6.28], [0,1,0,-1,0]
+    - Sütun grafik: GRAPH: [0,1,2,3], [10,20,15,25]
+    - Herhangi veri: GRAPH: [x1,x2,x3,...], [y1,y2,y3,...]
+    
     Bağlam:
     {context}
     """),
@@ -163,8 +189,31 @@ def send_request(message: Message):
                 graph_image_base64 = base64.b64encode(buf.read()).decode("utf-8")
                 plt.close()
         except:
-            # JSON değilse, normal metin yanıtı
-            pass
+            # JSON değilse, GRAPH: formatını kontrol et
+            if "GRAPH:" in answer:
+                try:
+                    import re, ast
+                    graph_line = re.search(r'GRAPH:\s*\[.*?\],\s*\[.*?\]', answer)
+                    if graph_line:
+                        coords = graph_line.group().replace("GRAPH:", "").strip()
+                        x_vals, y_vals = ast.literal_eval(f"[{coords}]")
+                        
+                        plt.figure(figsize=(8, 6))
+                        plt.plot(x_vals, y_vals, marker='o')
+                        plt.grid(True)
+                        plt.title("Grafik")
+                        
+                        buf = io.BytesIO()
+                        plt.savefig(buf, format="png", bbox_inches='tight')
+                        buf.seek(0)
+                        graph_image_base64 = base64.b64encode(buf.read()).decode("utf-8")
+                        plt.close()
+                        print("📊 Grafik oluşturuldu")
+                        
+                        # GRAPH satırını temizle
+                        answer = re.sub(r'GRAPH:\s*\[.*?\],\s*\[.*?\]', '', answer).strip()
+                except Exception as graph_error:
+                    print(f"⚠️ Grafik oluşturulamadı: {graph_error}")
 
         return {"text": answer, "graph_image": graph_image_base64}
 

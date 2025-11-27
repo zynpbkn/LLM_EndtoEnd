@@ -1,0 +1,67 @@
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+
+# Streamlit
+.streamlit/
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node (eğer Next.js veya React kullanıyorsan)
+node_modules/
+.next/
+dist/
+
+# FastAPI
+.uvicorn_cache/
+
+# Logs
+*.log
+logs/
+
+# Uploads (lokal test dosyaları)
+tmp/uploads/
+*.tmp
+
+# OS
+.env.bak
+*.bak

@@ -7,7 +7,7 @@ services:
       - "6334:6334"
     volumes:
       - qdrant_storage:/qdrant/storage
-
+       
   fastapi:
     build: .
     container_name: fastapi

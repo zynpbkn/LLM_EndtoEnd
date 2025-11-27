@@ -14,7 +14,15 @@ import pytesseract
 
 load_dotenv()
 
-embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004", task_type="RETRIEVAL_DOCUMENT")
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError("❌ GOOGLE_API_KEY .env'de bulunamadı!")
+
+embeddings = GoogleGenerativeAIEmbeddings(
+    model="text-embedding-004", 
+    task_type="RETRIEVAL_DOCUMENT",
+    google_api_key=api_key
+)
 url = "http://qdrant:6333"
 COLLECTION_NAME = "vbo-de-bootcamp"
 

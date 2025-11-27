@@ -310,4 +310,4 @@ elif st.session_state.page == "assistant":
         st.session_state.messages.append({"role": "assistant", "content": full_response})
 
     st.markdown("---")
-    st.markdown("*VBO AI&LLM Bootcamp - Streamlit + FastAPI + LangChain + Qdrant*")
+    st.markdown("*Zeynep BAKAN VBO AI&LLM Bootcamp - Streamlit + FastAPI + LangChain + Qdrant*")
